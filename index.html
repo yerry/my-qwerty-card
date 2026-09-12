@@ -1,9 +1,12 @@
+Berikut adalah kode yang telah diperbarui dengan semua teks penjelasan bahasa Inggris diterjemahkan ke bahasa Indonesia. Fungsi dan struktur kodenya tetap sama sehingga akan berjalan lancar seperti sebelumnya.
+
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet QwertyCard Generator with Advanced Simulator</title>
+    <title>Generator QwertyCard Dompet dengan Simulator Lanjutan</title>
     <!-- Include html2pdf.js library for PDF creation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -311,64 +314,64 @@
 <body>
 
 <div class="container">
-    <h1>Wallet QwertyCard Generator</h1>
-    <p class="subtitle">Generate physical, wallet-sized password generator ciphers.</p>
+    <h1>Generator QwertyCard Dompet</h1>
+    <p class="subtitle">Hasilkan cipher pembuat kata sandi fisik seukuran dompet.</p>
 
     <div class="controls">
-        <button onclick="generateNewCard()">🎲 Generate New Card</button>
-        <button class="secondary" onclick="printCard()">🖨️ Print Card</button>
-        <button class="secondary" onclick="saveAsPDF()">📄 Save as PDF</button>
+        <button onclick="generateNewCard()">🎲 Buat Kartu Baru</button>
+        <button class="secondary" onclick="printCard()">🖨️ Cetak Kartu</button>
+        <button class="secondary" onclick="saveAsPDF()">📄 Simpan sebagai PDF</button>
     </div>
 
     <!-- Printable/Exportable Card Block -->
     <div id="print-area">
         <div style="position: relative;">
-            <div class="cut-indicator">✂️ Cut along dashed line</div>
+            <div class="cut-indicator">✂️ Gunting mengikuti garis putus-putus</div>
             <div class="wallet-card">
-                <div class="card-header">QWERTYCARD SECURE SYSTEM</div>
+                <div class="card-header">SISTEM AMAN QWERTYCARD</div>
                 <div id="card-grid-container"></div>
                 <div class="spacebar-area">
-                    SPACEBAR CODE: <span id="base-code-text">--------</span>
+                    KODE SPASI: <span id="base-code-text">--------</span>
                 </div>
             </div>
         </div>
 
         <div class="pdf-instructions">
-            <h3>🔐 Quick Instructions</h3>
+            <h3>🔐 Instruksi Cepat</h3>
             <ol>
-                <li>Cut out the card and keep it securely in your wallet.</li>
-                <li>Your final password = <strong>Base Code</strong> + <strong>Your Secret Word</strong> + <strong>Mapped Website Letters</strong>.</li>
-                <li><em>Example:</em> Look up the letters of the website on the grid and swap them for their paired symbol.</li>
+                <li>Gunting kartu ini dan simpan dengan aman di dompet Anda.</li>
+                <li>Kata sandi akhir Anda = <strong>Kode Dasar (Kode Spasi)</strong> + <strong>Kata Rahasia Anda</strong> + <strong>Huruf Situs Web yang Dipetakan</strong>.</li>
+                <li><em>Contoh:</em> Cari huruf-huruf situs web pada grid dan tukar dengan simbol pasangannya.</li>
             </ol>
         </div>
     </div>
 
     <!-- Interactive Live Simulator Section -->
     <div class="simulator-box">
-        <h2>🛠️ Live Password Simulator</h2>
+        <h2>🛠️ Simulator Kata Sandi Langsung</h2>
         <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">
-            Test how your card works before you print it. Enter a real-world scenario below:
+            Uji bagaimana kartu Anda bekerja sebelum dicetak. Masukkan skenario dunia nyata di bawah ini:
         </p>
 
         <div class="form-group">
-            <label for="input-website">1. Website Name (automatically cleans punctuation & spaces)</label>
-            <input type="text" id="input-website" placeholder="e.g. netflix, amazon..." oninput="calculateLivePassword()">
+            <label for="input-website">1. Nama Situs Web (otomatis membersihkan tanda baca & spasi)</label>
+            <input type="text" id="input-website" placeholder="cth. netflix, amazon..." oninput="calculateLivePassword()">
         </div>
 
         <div class="form-group">
-            <label for="input-master-pass">2. Master Secret Word (kept only in your mind)</label>
-            <input type="password" id="input-master-pass" placeholder="e.g. MySecretPin#4" oninput="calculateLivePassword()">
+            <label for="input-master-pass">2. Kata Rahasia Utama (hanya disimpan dalam ingatan Anda)</label>
+            <input type="password" id="input-master-pass" placeholder="cth. PinRahasiaku#4" oninput="calculateLivePassword()">
         </div>
 
         <div class="result-panel">
             <div class="result-header-container">
-                <span style="font-size: 12px; font-weight: bold; color: #7f8c8d;">GENERATED PASSWORD</span>
-                <button class="copy-btn" onclick="copyPassword()">Copy</button>
+                <span style="font-size: 12px; font-weight: bold; color: #7f8c8d;">KATA SANDI DIHASILKAN</span>
+                <button class="copy-btn" onclick="copyPassword()">Salin</button>
             </div>
             <div class="password-text" id="output-password">----------------</div>
 
             <div class="strength-container">
-                <span class="strength-label" id="strength-label-text">Strength: N/A</span>
+                <span class="strength-label" id="strength-label-text">Kekuatan: N/A</span>
                 <div class="strength-bar-bg">
                     <div class="strength-bar-fill" id="strength-bar"></div>
                 </div>
@@ -400,7 +403,7 @@
         currentCardMap = {};
         const availableSymbols = [...CIPHER_SYMBOLS];
         
-        // Shuffle symbols randomly using Web Crypto
+        // Mengacak simbol secara acak menggunakan Web Crypto
         for (let i = availableSymbols.length - 1; i > 0; i--) {
             const j = getRandomCryptoInt(0, i + 1);
             [availableSymbols[i], availableSymbols[j]] = [availableSymbols[j], availableSymbols[i]];
@@ -421,7 +424,7 @@
 
         document.getElementById('card-grid-container').innerHTML = htmlGrid;
 
-        // Generate Base Code
+        // Menghasilkan Kode Dasar
         const pool = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%";
         let baseCode = "";
         for(let i = 0; i < 6; i++) {
@@ -459,7 +462,7 @@
 
         if (!password || password.includes("----")) {
             bar.style.width = "0%";
-            label.innerText = "Strength: N/A";
+            label.innerText = "Kekuatan: N/A";
             return;
         }
 
@@ -474,13 +477,13 @@
 
         if (score < 40) {
             bar.style.backgroundColor = "#e74c3c";
-            label.innerText = "Strength: Weak";
+            label.innerText = "Kekuatan: Lemah";
         } else if (score < 75) {
             bar.style.backgroundColor = "#f39c12";
-            label.innerText = "Strength: Moderate";
+            label.innerText = "Kekuatan: Sedang";
         } else {
             bar.style.backgroundColor = "#2ecc71";
-            label.innerText = "Strength: Strong";
+            label.innerText = "Kekuatan: Kuat";
         }
     }
 
@@ -489,8 +492,8 @@
         if (pwd && !pwd.includes("----")) {
             navigator.clipboard.writeText(pwd).then(() => {
                 const btn = document.querySelector('.copy-btn');
-                btn.innerText = "Copied!";
-                setTimeout(() => btn.innerText = "Copy", 2000);
+                btn.innerText = "Tersalin!";
+                setTimeout(() => btn.innerText = "Salin", 2000);
             });
         }
     }
@@ -503,7 +506,7 @@
         const element = document.getElementById('print-area');
         const opt = {
             margin:       0.5,
-            filename:     'wallet-qwertycard.pdf',
+            filename:     'qwertycard-dompet.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2 },
             jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -517,3 +520,5 @@
 
 </body>
 </html>
+
+```
