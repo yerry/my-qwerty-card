@@ -44,12 +44,37 @@
 
         #print-area {
             background: white; padding: 30px; border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: inline-block;
-            text-align: left; width: 100%; max-width: 500px; margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex;
+            flex-direction: column; align-items: center; width: 100%; 
+            max-width: 500px; margin: 0 auto; box-sizing: border-box;
         }
 
         /* -------------------------------------------
-           NEW CARD VISUALS BASED ON SCREENSHOT 
+           PEMBUNGKUS GARIS PUTUS-PUTUS (BARU)
+           ------------------------------------------- */
+        .card-cut-wrapper {
+            border: 2px dashed #7f8c8d;
+            padding: 18px; /* Memberikan ruang antara garis putus-putus dan kartu */
+            border-radius: 16px;
+            position: relative;
+            background-color: #ffffff;
+            display: inline-block;
+        }
+
+        .cut-indicator {
+            position: absolute; 
+            top: -10px; 
+            left: 20px;
+            background: #ffffff; /* Latar putih agar garis di belakang teks tertutup */
+            padding: 0 8px;
+            font-size: 12px; 
+            color: #7f8c8d; 
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        /* -------------------------------------------
+           VISUAL KARTU
            ------------------------------------------- */
         .wallet-card {
             width: 3.5in;
@@ -59,10 +84,9 @@
             padding: 18px 12px;
             box-sizing: border-box;
             position: relative;
-            font-family: Arial, Helvetica, sans-serif; /* Cleaner font for the keys */
-            margin-bottom: 20px;
+            font-family: Arial, Helvetica, sans-serif;
             overflow: hidden;
-            border: 2px solid #333; /* Slight border for visibility on white background */
+            /* Hapus border dashed di sini agar kartu terlihat murni hitam di tepinya */
         }
 
         .grid-row {
@@ -72,7 +96,6 @@
             margin-bottom: 6px;
         }
 
-        /* Stagger the keyboard rows */
         .row-0 { padding-left: 2px; }
         .row-1 { padding-left: 15px; }
         .row-2 { padding-left: 35px; }
@@ -83,7 +106,6 @@
             border: 2px solid var(--key-gray);
             border-radius: 8px;
             position: relative;
-            /* Diagonal Split Background */
             background: linear-gradient(135deg, var(--card-black) 50%, var(--key-gray) 50%);
             box-sizing: border-box;
         }
@@ -121,20 +143,15 @@
             letter-spacing: 1px;
         }
 
-        .cut-indicator {
-            position: absolute; top: -15px; left: 10px;
-            font-size: 12px; color: #7f8c8d; font-family: sans-serif;
-        }
-
-        /* Rest of UI Styles */
+        /* Instruksi & UI Lainnya */
         .pdf-instructions {
             font-size: 12px; line-height: 1.4; color: #34495e;
-            border-top: 1px solid #ecf0f1; padding-top: 15px; margin-top: 10px;
+            border-top: 1px solid #ecf0f1; padding-top: 15px; margin-top: 25px; width: 100%; text-align: left;
         }
         .pdf-instructions h3 { margin: 0 0 8px 0; font-size: 13px; color: #2c3e50; }
         .pdf-instructions ol { margin: 0; padding-left: 18px; }
         .pdf-instructions li { margin-bottom: 4px; }
-        .simulator-box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-top: 30px; text-align: left; box-sizing: border-box; }
+        .simulator-box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-top: 30px; text-align: left; box-sizing: border-box; width: 100%; }
         .simulator-box h2 { margin-top: 0; font-size: 18px; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 8px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #34495e; }
@@ -152,8 +169,9 @@
         @media print {
             body { background: white; padding: 0; }
             .controls, h1, p.subtitle, .simulator-box { display: none !important; }
-            #print-area { box-shadow: none; padding: 0; margin: 0; }
-            .wallet-card { margin-top: 20px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            #print-area { box-shadow: none; padding: 0; margin: 0; width: 100%; display: block; }
+            .card-cut-wrapper { margin-top: 20px; }
+            .wallet-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -161,7 +179,7 @@
 
 <div class="container">
     <h1>Generator QwertyCard Dompet</h1>
-    <p class="subtitle">Hasilkan cipher pembuat kata sandi fisik seukuran dompet.</p>
+    <p class="subtitle">Hasilkan pembuat kata sandi fisik seukuran dompet.</p>
 
     <div class="controls">
         <button onclick="generateNewCard()">🎲 Buat Kartu Baru</button>
@@ -170,7 +188,8 @@
     </div>
 
     <div id="print-area">
-        <div style="position: relative;">
+        <!-- Wrapper baru untuk garis putus-putus berada di sini -->
+        <div class="card-cut-wrapper">
             <div class="cut-indicator">✂️ Gunting mengikuti garis putus-putus</div>
             <div class="wallet-card">
                 <div id="card-grid-container"></div>
@@ -181,13 +200,12 @@
         <div class="pdf-instructions">
             <h3>🔐 Instruksi Cepat</h3>
             <ol>
-                <li>Gunting kartu ini dan simpan dengan aman di dompet Anda.</li>
+                <li>Gunting di sepanjang garis putus-putus dan simpan kartu (bagian hitam) dengan aman di dompet Anda.</li>
                 <li>Kata sandi akhir Anda = <strong>Kode Dasar (Spasi)</strong> + <strong>Kata Rahasia Anda</strong> + <strong>Huruf Situs Web Dipetakan</strong>.</li>
             </ol>
         </div>
     </div>
 
-    <!-- Simulator Box Remains Unchanged From Previous Iteration -->
     <div class="simulator-box">
         <h2>🛠️ Simulator Kata Sandi Langsung</h2>
         <div class="form-group">
@@ -219,7 +237,6 @@
         ["Z", "X", "C", "V", "B", "N", "M"]
     ];
 
-    // Expanded pool to match the image's mix of cases and symbols
     const CIPHER_SYMBOLS = ["!", "k", "A", "2", "&", "<", "9", "Q", "q", "o", ".", "0", "7", "\"", "s", "W", "L", "1", "8", "r", "R", "m", "M", "*", "f", "u"];
 
     let currentCardMap = {};
@@ -244,7 +261,6 @@
         let symbolIdx = 0;
         let htmlGrid = "";
 
-        // Build HTML with nested spans for diagonal split positioning
         KEYBOARD_ROWS.forEach((row, rowIndex) => {
             htmlGrid += `<div class="grid-row row-${rowIndex}">`;
             row.forEach(char => {
@@ -262,7 +278,6 @@
 
         document.getElementById('card-grid-container').innerHTML = htmlGrid;
 
-        // Spacebar Code generation (using 8 characters to match the reference image)
         const pool = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*()";
         let baseCode = "";
         for(let i = 0; i < 8; i++) {
