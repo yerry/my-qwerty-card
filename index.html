@@ -1,9 +1,16 @@
+Secara default pada kode sebelumnya, bagian Simulator sebenarnya sudah diatur agar otomatis hilang saat Anda menekan tombol cetak berkat kode CSS `@media print`.
+
+Namun, jika Anda mendapati bagian tersebut masih muncul (tergantung pengaturan browser), atau jika Anda ingin **benar-benar menghapus fitur Simulator tersebut secara permanen** dari halaman web Anda agar tampilannya lebih bersih, saya telah membuang semua elemen HTML, CSS, dan JavaScript yang berkaitan dengan "Simulator Kata Sandi Langsung".
+
+Berikut adalah kode yang sudah dibersihkan, hanya menyisakan fitur Generator dan fitur Cetak/PDF:
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator QwertyCard Dompet dengan Visual Lanjutan</title>
+    <title>Generator QwertyCard Dompet</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
@@ -50,10 +57,10 @@
         }
 
         /* -------------------------------------------
-           PEMBUNGKUS GARIS PUTUS-PUTUS (DIPERTEBAL)
+           PEMBUNGKUS GARIS PUTUS-PUTUS
            ------------------------------------------- */
         .card-cut-wrapper {
-            border: 4px dashed #000000; /* Diubah menjadi 4px dan warna hitam pekat */
+            border: 4px dashed #000000;
             padding: 22px; 
             border-radius: 16px;
             position: relative;
@@ -68,7 +75,7 @@
             background: #ffffff; 
             padding: 0 10px;
             font-size: 14px; 
-            color: #000000; /* Warna font dipertegas menjadi hitam */
+            color: #000000;
             font-family: sans-serif;
             font-weight: bold;
         }
@@ -142,7 +149,7 @@
             letter-spacing: 1px;
         }
 
-        /* Instruksi & UI Lainnya */
+        /* Instruksi */
         .pdf-instructions {
             font-size: 12px; line-height: 1.4; color: #34495e;
             border-top: 1px solid #ecf0f1; padding-top: 15px; margin-top: 25px; width: 100%; text-align: left;
@@ -150,28 +157,14 @@
         .pdf-instructions h3 { margin: 0 0 8px 0; font-size: 13px; color: #2c3e50; }
         .pdf-instructions ol { margin: 0; padding-left: 18px; }
         .pdf-instructions li { margin-bottom: 4px; }
-        .simulator-box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-top: 30px; text-align: left; box-sizing: border-box; width: 100%; }
-        .simulator-box h2 { margin-top: 0; font-size: 18px; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 8px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #34495e; }
-        .form-group input { width: 100%; padding: 10px; font-size: 14px; border: 1px solid #bdc3c7; border-radius: 4px; box-sizing: border-box; }
-        .result-panel { background-color: #ecf0f1; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 5px solid #bdc3c7; position: relative; }
-        .result-header-container { display: flex; justify-content: space-between; align-items: center; }
-        .result-panel div.password-text { font-family: "Courier New", Courier, monospace; font-size: 15px; font-weight: bold; word-break: break-all; margin-top: 8px; color: #2c3e50; padding-right: 75px; }
-        .copy-btn { position: absolute; right: 15px; top: 25px; background-color: #7f8c8d; padding: 6px 12px; font-size: 12px; border-radius: 4px; border: none; color: white; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .copy-btn:hover { background-color: #616a6b; }
-        .strength-container { margin-top: 12px; }
-        .strength-label { font-size: 11px; font-weight: bold; color: #7f8c8d; margin-bottom: 4px; display: block; }
-        .strength-bar-bg { background: #e0e0e0; height: 6px; border-radius: 3px; width: 100%; overflow: hidden; }
-        .strength-bar-fill { height: 100%; width: 0%; background: #e74c3c; transition: width 0.3s, background-color 0.3s; }
 
         @media print {
             body { background: white; padding: 0; }
-            .controls, h1, p.subtitle, .simulator-box { display: none !important; }
+            .controls, h1, p.subtitle { display: none !important; }
             #print-area { box-shadow: none; padding: 0; margin: 0; width: 100%; display: block; }
             .card-cut-wrapper { 
                 margin-top: 20px; 
-                border: 4px dashed #000000 !important; /* Memaksa printer membaca garis ini */
+                border: 4px dashed #000000 !important;
             }
             .wallet-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
@@ -181,7 +174,7 @@
 
 <div class="container">
     <h1>Generator QwertyCard Dompet</h1>
-    <p class="subtitle">Hasilkan kartu kata sandi fisik seukuran dompet.</p>
+    <p class="subtitle">Hasilkan cipher pembuat kata sandi fisik seukuran dompet.</p>
 
     <div class="controls">
         <button onclick="generateNewCard()">🎲 Buat Kartu Baru</button>
@@ -190,7 +183,6 @@
     </div>
 
     <div id="print-area">
-        <!-- Wrapper bergaris putus-putus yang lebih tebal -->
         <div class="card-cut-wrapper">
             <div class="cut-indicator">✂️ Gunting mengikuti garis putus-putus</div>
             <div class="wallet-card">
@@ -203,31 +195,8 @@
             <h3>🔐 Instruksi Cepat</h3>
             <ol>
                 <li>Gunting di sepanjang garis putus-putus dan simpan kartu (bagian hitam) dengan aman di dompet Anda.</li>
-                <li>Kata sandi akhir Anda = <strong>Kode Depan (Spasi)</strong> + <strong>Kata Rahasia Anda (Tengah)</strong> + <strong>Nama Situs (Akhir)</strong>.</li>
+                <li>Kata sandi akhir Anda = <strong>Kode Dasar (Spasi)</strong> + <strong>Kata Rahasia Anda</strong> + <strong>Huruf Situs Web Dipetakan</strong>.</li>
             </ol>
-        </div>
-    </div>
-
-    <div class="simulator-box">
-        <h2>🛠️ Simulator Kata Sandi Langsung</h2>
-        <div class="form-group">
-            <label for="input-website">1. Nama Situs Web</label>
-            <input type="text" id="input-website" placeholder="cth. netflix, amazon..." oninput="calculateLivePassword()">
-        </div>
-        <div class="form-group">
-            <label for="input-master-pass">2. Kata Rahasia Utama</label>
-            <input type="password" id="input-master-pass" placeholder="cth. PinRahasiaku#4" oninput="calculateLivePassword()">
-        </div>
-        <div class="result-panel">
-            <div class="result-header-container">
-                <span style="font-size: 12px; font-weight: bold; color: #7f8c8d;">KATA SANDI DIHASILKAN</span>
-                <button class="copy-btn" onclick="copyPassword()">Salin</button>
-            </div>
-            <div class="password-text" id="output-password">----------------</div>
-            <div class="strength-container">
-                <span class="strength-label" id="strength-label-text">Kekuatan: N/A</span>
-                <div class="strength-bar-bg"><div class="strength-bar-fill" id="strength-bar"></div></div>
-            </div>
         </div>
     </div>
 </div>
@@ -241,9 +210,6 @@
 
     const CIPHER_SYMBOLS = ["!", "k", "A", "2", "&", "<", "9", "Q", "q", "o", ".", "0", "7", "\"", "s", "W", "L", "1", "8", "r", "R", "m", "M", "*", "f", "u"];
 
-    let currentCardMap = {};
-    let currentBaseCode = "";
-
     function getRandomCryptoInt(min, max) {
         const range = max - min;
         const randomBuffer = new Uint32Array(1);
@@ -252,7 +218,6 @@
     }
 
     function generateNewCard() {
-        currentCardMap = {};
         const availableSymbols = [...CIPHER_SYMBOLS];
         
         for (let i = availableSymbols.length - 1; i > 0; i--) {
@@ -267,7 +232,6 @@
             htmlGrid += `<div class="grid-row row-${rowIndex}">`;
             row.forEach(char => {
                 const mappedSymbol = availableSymbols[symbolIdx++];
-                currentCardMap[char] = mappedSymbol;
                 
                 htmlGrid += `
                     <div class="key-pair">
@@ -285,55 +249,7 @@
         for(let i = 0; i < 8; i++) {
             baseCode += pool[getRandomCryptoInt(0, pool.length)];
         }
-        currentBaseCode = baseCode;
-        document.getElementById('base-code-text').innerText = currentBaseCode;
-
-        calculateLivePassword();
-    }
-
-    function calculateLivePassword() {
-        const siteInput = document.getElementById('input-website').value.toUpperCase().replace(/[^A-Z]/g, '');
-        const masterPass = document.getElementById('input-master-pass').value;
-
-        if (!siteInput && !masterPass) {
-            document.getElementById('output-password').innerText = "----------------";
-            updateStrengthMeter(""); return;
-        }
-
-        let mappedSite = "";
-        for (let char of siteInput) mappedSite += currentCardMap[char] || char;
-
-        const finalPassword = currentBaseCode + masterPass + mappedSite;
-        document.getElementById('output-password').innerText = finalPassword;
-        updateStrengthMeter(finalPassword);
-    }
-
-    function updateStrengthMeter(password) {
-        const bar = document.getElementById('strength-bar');
-        const label = document.getElementById('strength-label-text');
-        if (!password || password.includes("----")) { bar.style.width = "0%"; label.innerText = "Kekuatan: N/A"; return; }
-
-        let score = 0;
-        if (password.length >= 8) score += 25;
-        if (password.length >= 12) score += 25;
-        if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score += 20;
-        if (/[0-9]/.test(password)) score += 15;
-        if (/[^A-Za-z0-9]/.test(password)) score += 15;
-
-        bar.style.width = score + "%";
-        if (score < 40) { bar.style.backgroundColor = "#e74c3c"; label.innerText = "Kekuatan: Lemah"; } 
-        else if (score < 75) { bar.style.backgroundColor = "#f39c12"; label.innerText = "Kekuatan: Sedang"; } 
-        else { bar.style.backgroundColor = "#2ecc71"; label.innerText = "Kekuatan: Kuat"; }
-    }
-
-    function copyPassword() {
-        const pwd = document.getElementById('output-password').innerText;
-        if (pwd && !pwd.includes("----")) {
-            navigator.clipboard.writeText(pwd).then(() => {
-                const btn = document.querySelector('.copy-btn');
-                btn.innerText = "Tersalin!"; setTimeout(() => btn.innerText = "Salin", 2000);
-            });
-        }
+        document.getElementById('base-code-text').innerText = baseCode;
     }
 
     function printCard() { window.print(); }
@@ -353,3 +269,5 @@
 </script>
 </body>
 </html>
+
+```
