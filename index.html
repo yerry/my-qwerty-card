@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet QwertyCard Generator with Advanced Simulator</title>
     <!-- Include html2pdf.js library for PDF creation -->
-    <script src="https://cloudflare.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -92,16 +92,16 @@
         /* Wallet Card Wrapper */
         .wallet-card {
             width: 3.5in;
-            height: 2.0in;
+            height: 2.1in;
             border: 2px dashed #7f8c8d;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px 12px;
             box-sizing: border-box;
             background-color: #fff;
             position: relative;
             font-family: "Courier New", Courier, monospace;
-            font-size: 10px;
-            line-height: 1.2;
+            font-size: 9.5px;
+            line-height: 1.25;
             color: #000;
             overflow: hidden;
             margin-bottom: 20px;
@@ -125,11 +125,13 @@
 
         .key-pair {
             display: inline-block;
+            width: 2.2ch;
+            text-align: center;
         }
 
         .spacebar-area {
             position: absolute;
-            bottom: 8px;
+            bottom: 6px;
             left: 12px;
             right: 12px;
             border: 1px solid #000;
@@ -347,10 +349,171 @@
         <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">
             Test how your card works before you print it. Enter a real-world scenario below:
         </p>
-        
+
         <div class="form-group">
             <label for="input-website">1. Website Name (automatically cleans punctuation & spaces)</label>
             <input type="text" id="input-website" placeholder="e.g. netflix, amazon..." oninput="calculateLivePassword()">
         </div>
 
         <div class="form-group">
+            <label for="input-master-pass">2. Master Secret Word (kept only in your mind)</label>
+            <input type="password" id="input-master-pass" placeholder="e.g. MySecretPin#4" oninput="calculateLivePassword()">
+        </div>
+
+        <div class="result-panel">
+            <div class="result-header-container">
+                <span style="font-size: 12px; font-weight: bold; color: #7f8c8d;">GENERATED PASSWORD</span>
+                <button class="copy-btn" onclick="copyPassword()">Copy</button>
+            </div>
+            <div class="password-text" id="output-password">----------------</div>
+
+            <div class="strength-container">
+                <span class="strength-label" id="strength-label-text">Strength: N/A</span>
+                <div class="strength-bar-bg">
+                    <div class="strength-bar-fill" id="strength-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const KEYBOARD_ROWS = [
+        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+        ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+        ["Z", "X", "C", "V", "B", "N", "M"]
+    ];
+
+    const CIPHER_SYMBOLS = ["!", "@", "#", "$", "%", "^", "&", "*", "?", "=", "+", "-", "~", "[", "]", "{", "}", "<", ">", "3", "7", "9", "4", "2", "8", "6"];
+
+    let currentCardMap = {};
+    let currentBaseCode = "";
+
+    function getRandomCryptoInt(min, max) {
+        const range = max - min;
+        const randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        return min + (randomBuffer[0] % range);
+    }
+
+    function generateNewCard() {
+        currentCardMap = {};
+        const availableSymbols = [...CIPHER_SYMBOLS];
+        
+        // Shuffle symbols randomly using Web Crypto
+        for (let i = availableSymbols.length - 1; i > 0; i--) {
+            const j = getRandomCryptoInt(0, i + 1);
+            [availableSymbols[i], availableSymbols[j]] = [availableSymbols[j], availableSymbols[i]];
+        }
+
+        let symbolIdx = 0;
+        let htmlGrid = "";
+
+        KEYBOARD_ROWS.forEach(row => {
+            htmlGrid += '<div class="grid-row">';
+            row.forEach(char => {
+                const mappedSymbol = availableSymbols[symbolIdx++];
+                currentCardMap[char] = mappedSymbol;
+                htmlGrid += `<span class="key-pair">${char}:${mappedSymbol}</span>`;
+            });
+            htmlGrid += '</div>';
+        });
+
+        document.getElementById('card-grid-container').innerHTML = htmlGrid;
+
+        // Generate Base Code
+        const pool = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%";
+        let baseCode = "";
+        for(let i = 0; i < 6; i++) {
+            baseCode += pool[getRandomCryptoInt(0, pool.length)];
+        }
+        currentBaseCode = baseCode;
+        document.getElementById('base-code-text').innerText = currentBaseCode;
+
+        calculateLivePassword();
+    }
+
+    function calculateLivePassword() {
+        const siteInput = document.getElementById('input-website').value.toUpperCase().replace(/[^A-Z]/g, '');
+        const masterPass = document.getElementById('input-master-pass').value;
+
+        if (!siteInput && !masterPass) {
+            document.getElementById('output-password').innerText = "----------------";
+            updateStrengthMeter("");
+            return;
+        }
+
+        let mappedSite = "";
+        for (let char of siteInput) {
+            mappedSite += currentCardMap[char] || char;
+        }
+
+        const finalPassword = currentBaseCode + masterPass + mappedSite;
+        document.getElementById('output-password').innerText = finalPassword;
+        updateStrengthMeter(finalPassword);
+    }
+
+    function updateStrengthMeter(password) {
+        const bar = document.getElementById('strength-bar');
+        const label = document.getElementById('strength-label-text');
+
+        if (!password || password.includes("----")) {
+            bar.style.width = "0%";
+            label.innerText = "Strength: N/A";
+            return;
+        }
+
+        let score = 0;
+        if (password.length >= 8) score += 25;
+        if (password.length >= 12) score += 25;
+        if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score += 20;
+        if (/[0-9]/.test(password)) score += 15;
+        if (/[^A-Za-z0-9]/.test(password)) score += 15;
+
+        bar.style.width = score + "%";
+
+        if (score < 40) {
+            bar.style.backgroundColor = "#e74c3c";
+            label.innerText = "Strength: Weak";
+        } else if (score < 75) {
+            bar.style.backgroundColor = "#f39c12";
+            label.innerText = "Strength: Moderate";
+        } else {
+            bar.style.backgroundColor = "#2ecc71";
+            label.innerText = "Strength: Strong";
+        }
+    }
+
+    function copyPassword() {
+        const pwd = document.getElementById('output-password').innerText;
+        if (pwd && !pwd.includes("----")) {
+            navigator.clipboard.writeText(pwd).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerText = "Copied!";
+                setTimeout(() => btn.innerText = "Copy", 2000);
+            });
+        }
+    }
+
+    function printCard() {
+        window.print();
+    }
+
+    function saveAsPDF() {
+        const element = document.getElementById('print-area');
+        const opt = {
+            margin:       0.5,
+            filename:     'wallet-qwertycard.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // Initialize on load
+    window.onload = generateNewCard;
+</script>
+
+</body>
+</html>
