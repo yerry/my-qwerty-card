@@ -50,11 +50,11 @@
         }
 
         /* -------------------------------------------
-           PEMBUNGKUS GARIS PUTUS-PUTUS (BARU)
+           PEMBUNGKUS GARIS PUTUS-PUTUS (DIPERTEBAL)
            ------------------------------------------- */
         .card-cut-wrapper {
-            border: 2px dashed #7f8c8d;
-            padding: 18px; /* Memberikan ruang antara garis putus-putus dan kartu */
+            border: 4px dashed #000000; /* Diubah menjadi 4px dan warna hitam pekat */
+            padding: 22px; 
             border-radius: 16px;
             position: relative;
             background-color: #ffffff;
@@ -63,12 +63,12 @@
 
         .cut-indicator {
             position: absolute; 
-            top: -10px; 
+            top: -12px; 
             left: 20px;
-            background: #ffffff; /* Latar putih agar garis di belakang teks tertutup */
-            padding: 0 8px;
-            font-size: 12px; 
-            color: #7f8c8d; 
+            background: #ffffff; 
+            padding: 0 10px;
+            font-size: 14px; 
+            color: #000000; /* Warna font dipertegas menjadi hitam */
             font-family: sans-serif;
             font-weight: bold;
         }
@@ -86,7 +86,6 @@
             position: relative;
             font-family: Arial, Helvetica, sans-serif;
             overflow: hidden;
-            /* Hapus border dashed di sini agar kartu terlihat murni hitam di tepinya */
         }
 
         .grid-row {
@@ -170,7 +169,10 @@
             body { background: white; padding: 0; }
             .controls, h1, p.subtitle, .simulator-box { display: none !important; }
             #print-area { box-shadow: none; padding: 0; margin: 0; width: 100%; display: block; }
-            .card-cut-wrapper { margin-top: 20px; }
+            .card-cut-wrapper { 
+                margin-top: 20px; 
+                border: 4px dashed #000000 !important; /* Memaksa printer membaca garis ini */
+            }
             .wallet-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
@@ -179,7 +181,7 @@
 
 <div class="container">
     <h1>Generator QwertyCard Dompet</h1>
-    <p class="subtitle">Hasilkan pembuat kata sandi fisik seukuran dompet.</p>
+    <p class="subtitle">Hasilkan cipher pembuat kata sandi fisik seukuran dompet.</p>
 
     <div class="controls">
         <button onclick="generateNewCard()">🎲 Buat Kartu Baru</button>
@@ -188,7 +190,7 @@
     </div>
 
     <div id="print-area">
-        <!-- Wrapper baru untuk garis putus-putus berada di sini -->
+        <!-- Wrapper bergaris putus-putus yang lebih tebal -->
         <div class="card-cut-wrapper">
             <div class="cut-indicator">✂️ Gunting mengikuti garis putus-putus</div>
             <div class="wallet-card">
